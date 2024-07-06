@@ -7,10 +7,13 @@ using TicketSystem.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TicketSystem.Application.Tickets.Commends.CreateTicket;
+using Microsoft.AspNetCore.Cors;
+using TicketSystem.Application.Models;
 
 namespace TicketSystem.API.Controllers
 {
     [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
     [Route("api/[controller]")]
     public class TicketsController : ControllerBase
     {
@@ -29,10 +32,11 @@ namespace TicketSystem.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Ticket>>> Get()
+        public async Task<ActionResult<PaginatedList<Ticket>>> Get(int page = 1, int pageSize = 5)
         {
-            var tickets = await _mediator.Send(new GetTicketsQuery());
-            return Ok(tickets);
+            var query = new GetTicketsQuery { Page = page, PageSize = pageSize };
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpPut("{id}/handle")]

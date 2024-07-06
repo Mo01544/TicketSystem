@@ -1,0 +1,68 @@
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Tickets</h1>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>Id</th>
+          <th>Creation Date</th>
+          <th>Phone Number</th>
+          <th>Governorate</th>
+          <th>City</th>
+          <th>District</th>
+          <th>Handled</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ticket of tickets" [ngClass]="getTicketColor(ticket)">
+          <td>{{ ticket.id }}</td>
+          <td>{{ ticket.creationDate | date:'short' }}</td>
+          <td>{{ ticket.phoneNumber }}</td>
+          <td>{{ ticket.governorate }}</td>
+          <td>{{ ticket.city }}</td>
+          <td>{{ ticket.district }}</td>
+          <td>{{ ticket.isHandled ? 'Yes' : 'No' }}</td>
+          <td>
+            <button class="btn btn-success" (click)="handleTicket(ticket.id!)" [disabled]="ticket.isHandled">Handle</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="tickets.length === 0" class="alert alert-info text-center">No tickets available.</div>
+
+  <div class="d-flex justify-content-center mt-3">
+    <button class="btn btn-primary mr-2" (click)="previousPage()" [disabled]="page <= 1">Previous</button>
+    <span>Page {{ page }} of {{ totalPages }}</span>
+    <button class="btn btn-primary ml-2" (click)="nextPage()" [disabled]="page >= totalPages">Next</button>
+  </div>
+
+  <h2 class="text-center mt-5">Create New Ticket</h2>
+  <form (ngSubmit)="createTicket()" class="mt-3">
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number:</label>
+      <input id="phoneNumber" class="form-control" [(ngModel)]="newTicket.phoneNumber" name="phoneNumber" required>
+    </div>
+    <div class="form-group">
+      <label for="governorate">Governorate:</label>
+      <select id="governorate" class="form-control" [(ngModel)]="newTicket.governorate" name="governorate" required>
+        <option *ngFor="let governorate of governorates">{{ governorate }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="city">City:</label>
+      <select id="city" class="form-control" [(ngModel)]="newTicket.city" name="city" required>
+        <option *ngFor="let city of cities">{{ city }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="district">District:</label>
+      <select id="district" class="form-control" [(ngModel)]="newTicket.district" name="district" required>
+        <option *ngFor="let district of districts">{{ district }}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Ticket</button>
+  </form>
+</div>
